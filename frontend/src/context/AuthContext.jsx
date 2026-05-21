@@ -1,4 +1,6 @@
-import { createContext, useContext, useState, } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable no-unused-vars */
+import { createContext, useContext, useState, useEffect } from "react";
 import api from "../api/axios";
 
 const AuthContext = createContext();
@@ -17,17 +19,16 @@ export const AuthProvider = ({ children }) => {
             }
         }
         catch (error) {
-            setUser(null,error);
+            setUser(null);
         }
         finally {
             setLoading(false);
         }
     };
 
-    // useEffect(() => {
-    //     checkAuth();
-    // }, []);
-    checkAuth();
+    useEffect(() => {
+        checkAuth();
+    }, []);
 
     const login = async (email, password) => {
         try {
