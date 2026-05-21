@@ -4,12 +4,14 @@ import { accessToken,refreshToken } from "../utils/token.js";
 
 export const register = async (req, res) => {
     try {
+        console.log('Register request body:', req.body);
         const { name, email, password } = req.body;
-        await User.create({ name, email, password });
+        const newUser = await User.create({ name, email, password });
+        console.log('New User created:', newUser);
         return res.status(201).json({ success: true, message: 'user register success' });
     }
     catch (error) {
-        console.log(error, 'error in register');
+        console.error('Registration failed with error:', error);
         return res.status(500).json({ success: false, message: 'failed in register' });
     }
 }
@@ -47,7 +49,15 @@ export const login = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000 
         });
 
-        return res.json({ success: true, message: 'login success' });
+        return res.json({
+            success: true,
+            message: 'login success',
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
     }
     catch (error) {
         console.log('login failed', error);

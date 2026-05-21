@@ -1,59 +1,74 @@
-import { createContext,useContext,useState} from "react";
+import { createContext, useContext, useState, } from "react";
 import api from "../api/axios";
 
-const AuthContext=createContext();
+const AuthContext = createContext();
 
-export const AuthProvider=({children})=>{
-    const [user,setUser]=useState(null);
-    const [loading,setLoading]=useState(true);
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const checkAuth=async()=>{
-        try{
-            const res=await api.get('/auth/me');
-            setUser(res.data);
+    const checkAuth = async () => {
+        try {
+            const res = await api.get('/auth/me');
+            if (res.data && res.data.user) {
+                setUser(res.data.user);
+            } else {
+                setUser(null);
+            }
         }
-        catch(error){
-            alert('alert checkauth',error)
-            setUser(null);
+        catch (error) {
+            setUser(null,error);
         }
-        finally{
-            setLoading(false)
+        finally {
+            setLoading(false);
         }
-    }
-    checkAuth();
-
-    const login=async(email,password)=>{
-        try{
-            const res=await api.post('/auth/login',{email,password});
-            setUser(res.data);
-            return res.data;
-        }
-        catch(error){
-            alert('login error to fetching',error)
-        }
-    }
-
-    const register=async(userData)=>{
-        try{
-            const res=await api.post('/auth/register',{userData});
-            setUser(res.data);
-            return res.data;
-        }
-        catch(error){
-            alert('register error to fetching',error)
-        }
-    }
-
-    const logout = async () => {
-        await api.post('/auth/logout');
-        setUser(null);
     };
 
-    return(
-        <AuthContext.Provider value={{login,register,logout,user,loading,checkAuth}}>
+    // useEffect(() => {
+    //     checkAuth();
+    // }, []);
+    checkAuth();
+
+    const login = async (email, password) => {
+        try {
+            const res = await api.post('/auth/login', { email, password });
+            if (res.data && res.data.user) {
+                setUser(res.data.user);
+            }
+            return res.data;
+        }
+        catch (error) {
+            console.error('Login error', error);
+            throw error;
+        }
+    };
+
+    const register = async (userData) => {
+        try {
+            const res = await api.post('/auth/register', userData);
+            return res.data;
+        }
+        catch (error) {
+            console.error('Registration error', error);
+            throw error;
+        }
+    };
+
+    const logout = async () => {
+        try {
+            await api.post('/auth/logout');
+        } catch (error) {
+            console.error('Logout error', error);
+        } finally {
+            setUser(null);
+        }
+    };
+
+    return (
+        <AuthContext.Provider value={{ login, register, logout, user, loading, checkAuth }}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 
-export const UseAuth=()=>useContext(AuthContext);
+export const UseAuth = () => useContext(AuthContext);
