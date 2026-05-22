@@ -22,10 +22,10 @@ export const getUserUploadedFiles=async(req,res)=>{
     try{
         const userId=req.user._id;
         const uploads=await Upload.find({user:userId}).sort({createdAt:-1});
-        return res.status(200).json({success:true,message:'file finds success'})
+        return res.status(200).json({success:true,message:'file finds success',data:uploads});
     }
     catch(error){
-        console.log('error top get uploaded file by user')
-        return res.status(500),json({success:false,message:'error top get uploaded file by user'})
+        console.log('error top get uploaded file by user:', error);
+        return res.status(500).json({success:false,message:'error top get uploaded file by user'});
     }
 }
