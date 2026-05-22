@@ -7,7 +7,7 @@ import { protect } from '../middlewares/auth.middleware.js';
 
 const uploadRouter=express.Router();
 
-uploadRouter.post('/',protect,upload.single('file'),uploadDocument);
+uploadRouter.post('/',protect,upload.array('files', 5),uploadDocument);
 uploadRouter.post('/multiple',protect,upload.array('files', 5),uploadDocument);  // Multiple files upload
 uploadRouter.get('/',protect,getUserUploadedFiles)
 

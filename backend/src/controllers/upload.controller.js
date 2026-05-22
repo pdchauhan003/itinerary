@@ -9,7 +9,7 @@ export const uploadDocument=async(req,res)=>{
         };
         const userId = req.user._id;
         const { itineraryId,journeyTitle  } = req.body;
-        const uploadedFile = await uploadMultipleFilesService({file: req.files,userId,itineraryId});
+        const uploadedFile = await uploadMultipleFilesService({files: req.files,userId,itineraryId});
         return res.status(201).json({success: true,message: 'File uploaded successfully',data: uploadedFile});
     }
     catch(error){
