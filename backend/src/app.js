@@ -15,6 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api/upload', uploadRouter);
-app.use('/api/auth/', userRouter);
+app.use('/api/auth', userRouter);
 
 export { app };
