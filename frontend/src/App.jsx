@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import SharedItinerary from './pages/SharedItinerary';
 import { AuthProvider, UseAuth } from './context/AuthContext';
 import { Loader2 } from 'lucide-react';
 import './App.css';
@@ -27,6 +28,8 @@ const Contents = () => {
       <Routes>
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
         <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+        {/* Public shareable itinerary page — no auth required */}
+        <Route path="/itinerary/share/:id" element={<SharedItinerary />} />
         <Route path="/" element={
           <PrivateRoute>
             <Dashboard />

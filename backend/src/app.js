@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { uploadRouter } from './routes/upload.route.js';
 import { userRouter } from './routes/auth.route.js';
+import { itineraryRouter } from './routes/itinerary.route.js';
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.use(cookieParser());
 
 app.use('/api/upload', uploadRouter);
 app.use('/api/auth', userRouter);
+app.use('/api/itinerary', itineraryRouter);
 
 export { app };

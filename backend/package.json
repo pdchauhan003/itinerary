@@ -20,6 +20,7 @@
     "multer": "^2.0.2",
     "nanoid": "^5.1.5",
     "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.18.0",
     "streamifier": "^0.1.1"
   }
 }
