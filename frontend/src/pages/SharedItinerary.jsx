@@ -18,7 +18,7 @@ export default function SharedItinerary() {
   useEffect(() => {
     const fetchItinerary = async () => {
       try {
-        const response = await api.get(`/itinerary/${id}`);
+        const response = await api.get(`/itinerary/share/${id}`);
         if (response.data?.success) {
           const it = response.data.data;
           setItinerary(it);

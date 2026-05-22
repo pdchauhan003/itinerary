@@ -259,3 +259,26 @@ export const deleteItinerary = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server Error' });
     }
 };
+
+/**
+ * Get a specific itinerary publicly by ID (no auth required).
+ */
+export const getSharedItineraryById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const itinerary = await Itinerary.findById(id).populate('uploads');
+        if (!itinerary) {
+            return res.status(404).json({ success: false, message: 'Itinerary not found' });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: itinerary
+        });
+    } catch (error) {
+        console.error("Error getting shared itinerary:", error);
+        return res.status(500).json({ success: false, message: 'Server Error' });
+    }
+};
+
