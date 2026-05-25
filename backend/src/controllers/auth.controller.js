@@ -2,14 +2,18 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
 import { accessToken,refreshToken } from "../utils/token.js";
 
-const isProduction = process.env.NODE_ENV === 'production';
-
-const getCookieOptions = (maxAge) => ({
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'none' : 'lax',
-    ...(maxAge ? { maxAge } : {})
-});
+const getCookieOptions = (req, maxAge) => {
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+    const isSecure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+    const secure = isProduction || isSecure;
+    
+    return {
+        httpOnly: true,
+        secure: secure,
+        sameSite: secure ? 'none' : 'lax',
+        ...(maxAge ? { maxAge } : {})
+    };
+};
 
 export const register = async (req, res) => {
     try {
@@ -44,9 +48,9 @@ export const login = async (req, res) => {
         user.refreshToken = refreshtoken;
         await user.save();
 
-        res.cookie('accessToken', accesstoken, getCookieOptions(15 * 60 * 1000));
+        res.cookie('accessToken', accesstoken, getCookieOptions(req, 15 * 60 * 1000));
 
-        res.cookie('refreshToken', refreshtoken, getCookieOptions(7 * 24 * 60 * 60 * 1000));
+        res.cookie('refreshToken', refreshtoken, getCookieOptions(req, 7 * 24 * 60 * 60 * 1000));
 
         return res.json({
             success: true,
@@ -75,8 +79,8 @@ export const refresh = async (req, res) => {
         if (!user || user.refreshToken !== refresttoken) {
             return res.status(401).json({ success: false, message: 'refresh token is invalid' });
         }
-                const accesstoken = accessToken({ id: user._id });
-        res.cookie('accessToken', accesstoken, getCookieOptions(15 * 60 * 1000));
+        const accesstoken = accessToken({ id: user._id });
+        res.cookie('accessToken', accesstoken, getCookieOptions(req, 15 * 60 * 1000));
         return res.json({ success: true, message: 'access token refreshed' });
     }
     catch (error) {
@@ -106,8 +110,8 @@ export const logout = async (req, res) => {
         if (refreshtoken) {
             await User.findOneAndUpdate({ refreshToken: refreshtoken }, { refreshToken: '' });
         }
-        res.clearCookie('refreshToken', getCookieOptions());
-        res.clearCookie('accessToken', getCookieOptions());
+        res.clearCookie('refreshToken', getCookieOptions(req));
+        res.clearCookie('accessToken', getCookieOptions(req));
         return res.json({ success: true, message: 'logout success' });
     }
     catch (error) {
