@@ -81,34 +81,34 @@ Journey Title: "${journeyTitle}"
         }
 
         prompt += `
-Use the extracted details (dates, flights, hotel check-ins, transit, booking references) to reconstruct the main activities of the trip. Reconstruct a seamless, day-by-day plan. If there are gaps in dates or times, use your knowledge to fill them in with logical and interesting activities (sightseeing, local dining, transit).
+            Use the extracted details (dates, flights, hotel check-ins, transit, booking references) to reconstruct the main activities of the trip. Reconstruct a seamless, day-by-day plan. If there are gaps in dates or times, use your knowledge to fill them in with logical and interesting activities (sightseeing, local dining, transit).
 
-You MUST respond with a JSON object matching this schema:
-{
-  "title": "Clean, catchy itinerary title",
-  "destination": "Main city/countries visited",
-  "overview": "Short summary of the journey, destination highlights, and overall vibe",
-  "days": [
-    {
-      "dayNumber": 1,
-      "date": "Optional formatted date (e.g. YYYY-MM-DD or Day 1)",
-      "theme": "Theme or highlight of the day",
-      "activities": [
-        {
-          "time": "Formatted time (e.g. 09:00 AM or Morning)",
-          "title": "Title of the activity",
-          "description": "Details about flight, check-in, sightseeing, or meal reservation. Include booking references if found in the documents.",
-          "type": "Must be one of: 'flight', 'hotel', 'dining', 'sightseeing', 'transit'",
-          "location": "Optional location name or address"
-        }
-      ]
-    }
-  ],
-  "travelTips": [
-    "Useful tips like weather advice, transport, currency, local rules based on the destination."
-  ]
-}
-`;
+            You MUST respond with a JSON object matching this schema:
+            {
+            "title": "Clean, catchy itinerary title",
+            "destination": "Main city/countries visited",
+            "overview": "Short summary of the journey, destination highlights, and overall vibe",
+            "days": [
+                {
+                "dayNumber": 1,
+                "date": "Optional formatted date (e.g. YYYY-MM-DD or Day 1)",
+                "theme": "Theme or highlight of the day",
+                "activities": [
+                    {
+                    "time": "Formatted time (e.g. 09:00 AM or Morning)",
+                    "title": "Title of the activity",
+                    "description": "Details about flight, check-in, sightseeing, or meal reservation. Include booking references if found in the documents.",
+                    "type": "Must be one of: 'flight', 'hotel', 'dining', 'sightseeing', 'transit'",
+                    "location": "Optional location name or address"
+                    }
+                ]
+                }
+            ],
+            "travelTips": [
+                "Useful tips like weather advice, transport, currency, local rules based on the destination."
+            ]
+            }
+            `;
 
         // Build Gemini content parts: text prompt + any image parts
         const parts = [

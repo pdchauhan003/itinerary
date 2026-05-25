@@ -37,14 +37,14 @@ export const login = async (req, res) => {
 
         res.cookie('accessToken', accesstoken, {
             httpOnly: true,
-            secure: false,        // set true only in production HTTPS
+            secure: true,        // set true only in production HTTPS
             sameSite: 'lax',
             maxAge: 15 * 60 * 1000
         });
 
         res.cookie('refreshToken', refreshtoken, {
             httpOnly: true,
-            secure:false,
+            secure:true,
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000 
         });
